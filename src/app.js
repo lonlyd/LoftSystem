@@ -7,7 +7,7 @@ const PORT = 3000;
 
 app.use(bodyParcer.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static('build'));
 app.use('/api', require(path.join(__dirname, 'api', 'v1.0')));
 
 //404
