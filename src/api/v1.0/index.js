@@ -34,6 +34,6 @@ router.post('api/news', auth, news.post);
 router.patch('api/news/:id', auth, news.patch);
 router.delete('/api/news/:id', auth, news.delete);
 router.get('/api/users', auth, users.get);
-router.patch('/api/users/:id/permission', auth, users.patchpermission);
+// router.patch('/api/users/:id/permission', auth, users.patchpermission);
 
 module.exports = router;
