@@ -1,11 +1,12 @@
 const path = require('path');
 const express = require('express');
-const bodyParcer = require('body-parser');
 const bodyParser = require('body-parser');
 const app = express();
+const server = require('http').createServer(app);
+const io = require('socket.io').listen(server);
 const PORT = 3000;
 
-app.use(bodyParcer.json());
+app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/api', require(path.join(__dirname, 'api', 'v1.0')));
@@ -22,6 +23,6 @@ app.use(function (req, res, next) {
     res.render('error', { message: err.message, error: err });
   });
   
-  const server = app.listen(process.env.PORT || PORT, function () {
+  server = app.listen(process.env.PORT || PORT, function () {
     console.log('Server start on port: ' + server.address().port);
   });
