@@ -1,8 +1,9 @@
 const express = require('express');
+const app = express();
 const router = express.Router();
 const path = require('path');
 const passport = require('passport');
-const { connected } = require('process');
+const server = require('http').createServer(app);
 const io = require('socket.io').listen(server);
 
 const login = require(path.join(__dirname, 'login'));
