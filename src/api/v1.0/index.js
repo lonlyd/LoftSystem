@@ -2,6 +2,8 @@ const express = require('express');
 const router = express.Router();
 const path = require('path');
 const passport = require('passport');
+const { connected } = require('process');
+const io = require('socket.io').listen(server);
 
 const login = require(path.join(__dirname, 'login'));
 const news = require(path.join(__dirname, 'news'));
@@ -22,6 +24,63 @@ const auth = (req, res, next) => {
     }
   })(req, res, next)
 }
+
+const connectedUsers = {};
+const historyMessage = {};
+
+const addMessage = (senderID, recipientID, data) => {
+  if (historyMessage[senderID]) {
+    if (historyMessage[senderID][recipientID]) {
+      if (historyMessage[senderID][recipientID].length > 10) {
+        historyMessage[senderID][recipientID].shift()
+      }
+      historyMessage[senderID][recipientID].push(data)
+    } else {
+      historyMessage[senderID][recipientID] = []
+      historyMessage[senderID][recipientID].push(data)
+    }
+  } else {
+    historyMessage[senderID] = {}
+    historyMessage[senderID][recipientID] = []
+    historyMessage[senderID][recipientID].push(data)
+  }
+}
+
+io.on('connection', function (socket) {
+  const socketID = socket.id;
+  socket.on('user:connect', function (data) {
+    const user = {...data, socketID, activeRoom: null};
+    connectedUsers[socketID] = user;
+    socket.emit('user:list', Object.values(connectedUsers));
+    socket.broadcast.emit('user:add', user);
+  });
+  socket.on('message:add', function(data) {
+    ////////////////////
+    console.log('message:add');
+    console.log(data);
+    ////////////////////
+    const { senderID, recipientID } = data;
+    socket.emit('message:add', data);
+    socket.broadcast.to(data.roomID).emit('message:add', data);
+    addMessage(senderID, recipientID, data);
+    addMessage(recipientID, senderID, data);
+  });
+  socket.on('message:history', function (data) {
+    ///////////
+    console.log('message:history')
+    console.log(data)
+    console.log(historyMessage)
+    //////////////
+    if (historyMessage[data.userID] && historyMessage[data.userID][data.recipientID]) {
+      socket.emit('message:history', historyMessage[data.userID][data.recipientID]);
+      console.log(historyMessage[data.userID][data.recipientID]);
+    }
+  })
+  socket.on('disconnect', function (data) {
+    delete connectedUsers[socketID];
+    socket.broadcast.emit('users:leave', socketID);
+  })
+})
 
 router.post('/api/registration', registration.post);
 router.post('/api/login', login.post);

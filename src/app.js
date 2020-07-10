@@ -3,8 +3,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const app = express();
 const server = require('http').createServer(app);
-const io = require('socket.io').listen(server);
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -24,5 +23,7 @@ app.use(function (err, req, res) {
 });
 
 app.listen(process.env.PORT || PORT, function () {
-  console.log('Server start on port: ' + server.address().port);
+  console.log('Server start on port: ' + PORT);
+  console.log('Environment', process.env.NODE_ENV);
+  console.log(`Server running. Use our API on port: ${PORT}`);
 });
