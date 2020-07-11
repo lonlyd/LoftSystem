@@ -3,13 +3,9 @@ const tokens = require('../auth/tokens.js');
 const secret = require('../auth/config.json');
 const helper = require('../helpers/serialize');
 
-
-
 module.exports.post = async function (req, res, next) {
-  passport.authenticate(
-    'local',
-    { session: false },
-    async (err, user, info) => {
+  passport.authenticate('local', { session: false },
+    async function (err, user) {
       if (err) {
         return next(err);
       }
@@ -24,5 +20,5 @@ module.exports.post = async function (req, res, next) {
         });
       }
     },
-  )(req, res, next);
+  )(res, req, next);
 }

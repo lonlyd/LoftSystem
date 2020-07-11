@@ -1,3 +1,8 @@
+const db = require('../models');
+const helper = require('../helpers/serialize');
+const secret = require('../auth/config.json');
+const tokens = require('../auth/tokens.js');
+
 module.exports.post = async function (req, res) {
   const { username } = req.body;
   const user = await db.getUserByName(username);

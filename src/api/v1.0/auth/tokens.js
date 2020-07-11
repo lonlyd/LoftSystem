@@ -2,7 +2,7 @@ const jwt = require('jsonwebtoken');
 const _ = require('lodash');
 const helper = require('../helpers/serialize');
 
-module.exports.createTokens = async function (user, secret) {
+const createTokens = async function (user, secret) {
   const createToken = await jwt.sign(
     {
       user: _.pick(user, 'id')
@@ -33,7 +33,7 @@ module.exports.createTokens = async function (user, secret) {
   }
 };
 
-module.exports.refreshTokens = async function (refreshToken, models, SECRET) {
+const refreshTokens = async function (refreshToken, models, SECRET) {
   const user = await getUserByToken(refreshToken, models, SECRET);
   if (user) {
     return {
@@ -44,7 +44,7 @@ module.exports.refreshTokens = async function (refreshToken, models, SECRET) {
     return {}
   }
 }
-module.exports.getUserByToken = async function(token, models, SECRET) {
+const getUserByToken = async function(token, models, SECRET) {
   let userId = -1
   try {
     userId = jwt.verify(token, SECRET).user.id;
@@ -53,4 +53,9 @@ module.exports.getUserByToken = async function(token, models, SECRET) {
   }
   const user = await models.getUserById(userId);
   return user;
+}
+module.exports = {
+  createTokens,
+  refreshTokens,
+  getUserByToken,
 }

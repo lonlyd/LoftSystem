@@ -1,7 +1,7 @@
-const User = require('./schemas/user.js');
+const User = require('./schemas/user');
 const News = require('./schemas/news');
 const helper = require('../helpers/serialize');
-
+require('./connection');
 module.exports.getUserByName = async function (userName) {
     return User.findOne({ userName });
 }

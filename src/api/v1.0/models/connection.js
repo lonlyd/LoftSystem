@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
 require('dotenv').config();
-let uri = process.env.uriDB;
-
+let uri = 'mongodb://localhost:27017/loftsystem' || process.env.DB_NAME;
 mongoose.Promise = global.Promise;
 mongoose.set('useFindAndModify', false);
 mongoose.set('useCreateIndex', true);
@@ -29,4 +28,4 @@ process.on('SIGINT', () => {
     console.log('Mongoose connection disconnected app termination');
     process.exit(1);
   })
-}) 
+})

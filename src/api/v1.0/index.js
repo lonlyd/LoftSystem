@@ -5,6 +5,8 @@ const path = require('path');
 const passport = require('passport');
 const server = require('http').createServer(app);
 const io = require('socket.io').listen(server);
+const helper = require('./helpers/serialize');
+const db = require('./models');
 
 const login = require(path.join(__dirname, 'login'));
 const news = require(path.join(__dirname, 'news'));
@@ -29,42 +31,42 @@ const auth = (req, res, next) => {
 const connectedUsers = {};
 const historyMessage = {};
 
-const addMessage = (senderID, recipientID, data) => {
-  if (historyMessage[senderID]) {
-    if (historyMessage[senderID][recipientID]) {
-      if (historyMessage[senderID][recipientID].length > 10) {
-        historyMessage[senderID][recipientID].shift()
+const addMessage = (senderId, recipientId, data) => {
+  if (historyMessage[senderId]) {
+    if (historyMessage[senderId][recipientId]) {
+      if (historyMessage[senderId][recipientId].length > 10) {
+        historyMessage[senderId][recipientId].shift()
       }
-      historyMessage[senderID][recipientID].push(data)
+      historyMessage[senderId][recipientId].push(data)
     } else {
-      historyMessage[senderID][recipientID] = []
-      historyMessage[senderID][recipientID].push(data)
+      historyMessage[senderId][recipientId] = []
+      historyMessage[senderId][recipientId].push(data)
     }
   } else {
-    historyMessage[senderID] = {}
-    historyMessage[senderID][recipientID] = []
-    historyMessage[senderID][recipientID].push(data)
+    historyMessage[senderId] = {}
+    historyMessage[senderId][recipientId] = []
+    historyMessage[senderId][recipientId].push(data)
   }
 }
 
 io.on('connection', function (socket) {
-  const socketID = socket.id;
+  const socketId = socket.Id;
   socket.on('user:connect', function (data) {
-    const user = {...data, socketID, activeRoom: null};
-    connectedUsers[socketID] = user;
+    const user = { ...data, socketId, activeRoom: null };
+    connectedUsers[socketId] = user;
     socket.emit('user:list', Object.values(connectedUsers));
     socket.broadcast.emit('user:add', user);
   });
-  socket.on('message:add', function(data) {
+  socket.on('message:add', function (data) {
     ////////////////////
     console.log('message:add');
     console.log(data);
     ////////////////////
-    const { senderID, recipientID } = data;
+    const { senderId, recipientId } = data;
     socket.emit('message:add', data);
-    socket.broadcast.to(data.roomID).emit('message:add', data);
-    addMessage(senderID, recipientID, data);
-    addMessage(recipientID, senderID, data);
+    socket.broadcast.to(data.roomId).emit('message:add', data);
+    addMessage(senderId, recipientId, data);
+    addMessage(recipientId, senderId, data);
   });
   socket.on('message:history', function (data) {
     ///////////
@@ -72,28 +74,51 @@ io.on('connection', function (socket) {
     console.log(data)
     console.log(historyMessage)
     //////////////
-    if (historyMessage[data.userID] && historyMessage[data.userID][data.recipientID]) {
-      socket.emit('message:history', historyMessage[data.userID][data.recipientID]);
-      console.log(historyMessage[data.userID][data.recipientID]);
+    if (historyMessage[data.userId] && historyMessage[data.userId][data.recipientId]) {
+      socket.emit('message:history', historyMessage[data.userId][data.recipientId]);
+      console.log(historyMessage[data.userId][data.recipientId]);
     }
   })
   socket.on('disconnect', function (data) {
-    delete connectedUsers[socketID];
-    socket.broadcast.emit('users:leave', socketID);
+    delete connectedUsers[socketId];
+    socket.broadcast.emit('users:leave', socketId);
   })
 })
 
-router.post('/api/registration', registration.post);
-router.post('/api/login', login.post);
-router.post('/api/refresh-token', refreshtoken.post);
-router.get('/api/profile', auth, profile.get);
-router.patch('/api/profile', auth, profile.patch);
-router.delete('/api/users/:id', auth, users.delete);
-router.get('/api/news', auth, news.get);
-router.post('api/news', auth, news.post);
-router.patch('api/news/:id', auth, news.patch);
-router.delete('/api/news/:id', auth, news.delete);
-router.get('/api/users', auth, users.get);
-// router.patch('/api/users/:id/permission', auth, users.patchpermission);
+const permissionPatch = async function (req, res, next) {
+  try {
+    const user = await db.updateUser(req.params.Id, req.body);
+    res.json({
+      ...helper.serializeUser(user)
+    })
+  } catch (e) {
+    next(e);
+  }
+};
+
+router.post('/registration', registration.post);
+router.post('/login', login.post);
+router.post('/refresh-token', refreshtoken.post);
+router.get('/profile', auth, profile.get);
+router.patch('/profile', auth, profile.patch);
+router.delete('/users/:Id', auth, users.delete);
+router.get('/news', auth, news.get);
+router.post('/news', auth, news.post);
+router.patch('/news/:Id', auth, news.patch);
+router.delete('/news/:Id', auth, news.delete);
+router.get('/users', auth, users.get);
+router.patch('/users/:Id/permission', auth, permissionPatch);
+
+//404
+app.use(function (req, res, next) {
+  let err = new Error('Page not found');
+  err.status = 404;
+  next(err);
+});
+//error handler and render the error page
+app.use(function (err, req, res) {
+  res.status(err.status || 500);
+  res.render('error', { message: err.message, error: err });
+});
 
 module.exports = router;

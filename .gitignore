@@ -13,6 +13,7 @@
 *~
 
 # OS or Editor folders
+.env
 *.sublime-grunt.cache
 *.sublime-project
 *.sublime-workspace
