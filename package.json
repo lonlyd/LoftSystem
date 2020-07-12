@@ -1,6 +1,10 @@
 {
   "name": "loftschool-system",
   "version": "0.1.0",
+  "author": "Ilshat Ishdavletov",
+  "engines": {
+    "node": "13.x"
+  },
   "private": true,
   "dependencies": {
     "@material-ui/core": "^4.3.3",
@@ -40,7 +44,7 @@
   },
   "scripts": {
     "start": "node src/app.js",
-    // "start": "react-scripts start",
+    "start-development": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
