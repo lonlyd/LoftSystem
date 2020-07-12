@@ -1,13 +1,13 @@
 const mongoose = require('mongoose');
 require('dotenv').config();
 let dbUrl = process.env.MONGODB_URI || 'localhost:27017';
-let dbPort = process.env.DB_PORT || 27017;
-let dbCollection = process.env.DB_COLLECTION || 'loftsystem';
-let uri = `mongodb://${dbUrl}:${dbPort}/${dbCollection}`;
+// let dbPort = process.env.DB_PORT || 27017;
+// let dbCollection = process.env.DB_COLLECTION || 'loftsystem';
+// let uri = `mongodb://${dbUrl}:${dbPort}/${dbCollection}`;
 mongoose.Promise = global.Promise;
 mongoose.set('useFindAndModify', false);
 mongoose.set('useCreateIndex', true);
-mongoose.connect(uri, {
+mongoose.connect(dbUrl, {
   useNewUrlParser: true,
   useFindAndModify: false,
   useCreateIndex: true,
