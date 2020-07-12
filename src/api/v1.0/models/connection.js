@@ -1,6 +1,9 @@
 const mongoose = require('mongoose');
 require('dotenv').config();
-let uri = 'mongodb://localhost:27017/loftsystem' || process.env.DB_NAME;
+let dbUrl = process.env.DB_URL || 'localhost';
+let dbPort = process.env.DB_PORT || 27017;
+let dbCollection = process.env.DB_COLLECTION || 'loftsystem';
+let uri = `mongodb://${dbUrl}:${dbPort}/${dbCollection}`;
 mongoose.Promise = global.Promise;
 mongoose.set('useFindAndModify', false);
 mongoose.set('useCreateIndex', true);

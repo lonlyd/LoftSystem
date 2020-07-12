@@ -3,6 +3,8 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const app = express();
 const PORT = process.env.PORT || 3000;
+require(path.join('..', 'src', 'api', 'v1.0', 'auth', 'passport.js'));
+
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
