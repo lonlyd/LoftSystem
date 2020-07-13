@@ -2,8 +2,8 @@ const passport = require('passport');
 const tokens = require('../auth/tokens.js');
 const secret = require('../auth/config.json');
 const helper = require('../helpers/serialize');
-require('../auth/passport.js');
-require('../models.connection.js');
+require('../auth/passport);
+require('../models/connection');
 
 
 module.exports.post = async function (req, res, next) {
