@@ -8,10 +8,7 @@ const io = require('socket.io').listen(server);
 const helper = require('./helpers/serialize');
 const db = require('./models');
 
-const tokens = require('./auth/tokens.js');
-const secret = require('./auth/config.json');
-
-// const login = require(path.join(__dirname, 'login'));
+const login = require(path.join(__dirname, 'login'));
 const news = require(path.join(__dirname, 'news'));
 const profile = require(path.join(__dirname, 'profile'));
 const refreshtoken = require(path.join(__dirname, 'refreshtoken'));
@@ -99,28 +96,8 @@ const permissionPatch = async function (req, res, next) {
   }
 };
 
-const loginPost = async function (req, res, next) {
-  passport.authenticate('local', { session: false },
-    async function (err, user) {
-      if (err) {
-        return next(err);
-      }
-      if (!user) {
-        return res.status(400).json({});
-      }
-      if (user) {
-        const token = await tokens.createTokens(user, secret.secret);
-        res.json({
-          ...helper.serializeUser(user),
-          ...token,
-        });
-      }
-    },
-  )(res, req, next);
-}
-
 router.post('/registration', registration.post);
-router.post('/login', loginPost);
+router.post('/login', login.post);
 router.post('/refresh-token', refreshtoken.post);
 router.get('/profile', auth, profile.get);
 router.patch('/profile', auth, profile.patch);
