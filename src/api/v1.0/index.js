@@ -96,8 +96,28 @@ const permissionPatch = async function (req, res, next) {
   }
 };
 
+const loginPost = async function (req, res, next) {
+  passport.authenticate('local', { session: false },
+    async function (err, user) {
+      if (err) {
+        return next(err);
+      }
+      if (!user) {
+        return res.status(400).json({});
+      }
+      if (user) {
+        const token = await tokens.createTokens(user, secret.secret);
+        res.json({
+          ...helper.serializeUser(user),
+          ...token,
+        });
+      }
+    },
+  )(res, req, next);
+}
+
 router.post('/registration', registration.post);
-router.post('/login', login.post);
+router.post('/login', loginPost);
 router.post('/refresh-token', refreshtoken.post);
 router.get('/profile', auth, profile.get);
 router.patch('/profile', auth, profile.patch);
