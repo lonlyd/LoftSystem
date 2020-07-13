@@ -5,23 +5,25 @@ const helper = require('../helpers/serialize');
 require('../auth/passport');
 require('../models/connection');
 
-
-module.exports.post = async function (req, res, next) {
-  passport.authenticate('local', { session: false },
-    async function (err, user) {
+module.exports.post = async (req, res, next) => {
+  passport.authenticate(
+    'local',
+    { session: false },
+    async (err, user, info) => {
       if (err) {
-        return next(err);
+        return next(err)
       }
       if (!user) {
-        return res.status(400).json({});
+        return res.status(400).json({}) 
       }
       if (user) {
-        const token = await tokens.createTokens(user, secret.secret);
+        const token = await tokens.createTokens(user, secret.secret)
+        console.log(token)
         res.json({
           ...helper.serializeUser(user),
           ...token,
-        });
+        })
       }
     },
-  )(res, req, next);
+  )(req, res, next)
 }
