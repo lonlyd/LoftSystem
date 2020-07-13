@@ -96,18 +96,18 @@ const permissionPatch = async function (req, res, next) {
   }
 };
 
-router.post('/api/registration', registration.post);
-router.post('/api/login', login.post);
-router.post('/api/refresh-token', refreshtoken.post);
-router.get('/api/profile', auth, profile.get);
-router.patch('/api/profile', auth, profile.patch);
-router.delete('/api/users/:Id', auth, users.delete);
-router.get('/api/news', auth, news.get);
-router.post('/api/news', auth, news.post);
-router.patch('/api/news/:Id', auth, news.patch);
-router.delete('/api/news/:Id', auth, news.delete);
-router.get('/api/users', auth, users.get);
-router.patch('/api/users/:Id/permission', auth, permissionPatch);
+router.post('/registration', registration.post);
+router.post('/login', login.post);
+router.post('/refresh-token', refreshtoken.post);
+router.get('/profile', auth, profile.get);
+router.patch('/profile', auth, profile.patch);
+router.delete('/users/:Id', auth, users.delete);
+router.get('/news', auth, news.get);
+router.post('/news', auth, news.post);
+router.patch('/news/:Id', auth, news.patch);
+router.delete('/news/:Id', auth, news.delete);
+router.get('/users', auth, users.get);
+router.patch('/users/:Id/permission', auth, permissionPatch);
 
 //404
 app.use(function (req, res, next) {
