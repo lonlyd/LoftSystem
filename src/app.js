@@ -11,7 +11,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static('build'));
 app.use('/api', require(path.join(__dirname, 'api', 'v1.0')));
 
-// require('./models/connection');
+require(path.join('..', 'src', 'api', 'v1.0', 'models', 'connection.js');
 
 app.listen(PORT, function () {
   console.log('Server start on port: ' + PORT);
