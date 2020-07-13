@@ -2,7 +2,7 @@ const passport = require('passport');
 const tokens = require('../auth/tokens.js');
 const secret = require('../auth/config.json');
 const helper = require('../helpers/serialize');
-require('../auth/passport);
+require('../auth/passport');
 require('../models/connection');
 
 
