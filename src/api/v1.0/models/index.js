@@ -1,7 +1,9 @@
 const User = require('./schemas/user');
 const News = require('./schemas/news');
 const helper = require('../helpers/serialize');
-require('./connection');
+require('./connection.js');
+
+
 module.exports.getUserByName = async function (userName) {
     return User.findOne({ userName });
 }
@@ -72,7 +74,9 @@ module.exports.createNews = async function (data, user) {
 }
 
 module.exports.updateNews = async function (id, data) {
-    return await News.findByIdAndUpdate({ _id: id }, { $set: data });
+    return await News.findByIdAndUpdate(
+        { _id: id }, 
+        { $set: data });
 }
 
 module.exports.deleteNews = async function (id) {

@@ -7,6 +7,7 @@ module.exports.get = async function (req, res) {
 };
 
 module.exports.delete = async function (req, res) {
+  console.log('USERS REQ  '+ req)
   await db.deleteUser(req.param.id);
   res.status(204).json({});
 }

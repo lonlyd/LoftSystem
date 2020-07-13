@@ -2,6 +2,9 @@ const db = require('../models');
 const helper = require('../helpers/serialize');
 const secret = require('../auth/config.json');
 const tokens = require('../auth/tokens.js');
+require('../models/connection.js');
+
+
 
 module.exports.get = async function (req, res, next) {
   try {

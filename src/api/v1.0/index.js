@@ -7,6 +7,7 @@ const server = require('http').createServer(app);
 const io = require('socket.io').listen(server);
 const helper = require('./helpers/serialize');
 const db = require('./models');
+require ('./models/connection');
 
 const login = require(path.join(__dirname, 'login'));
 const news = require(path.join(__dirname, 'news'));
@@ -87,7 +88,7 @@ io.on('connection', function (socket) {
 
 const permissionPatch = async function (req, res, next) {
   try {
-    const user = await db.updateUser(req.params.Id, req.body);
+    const user = await db.updateUserPermission(req.params.Id, req.body);
     res.json({
       ...helper.serializeUser(user)
     })
@@ -101,13 +102,13 @@ router.post('/login', login.post);
 router.post('/refresh-token', refreshtoken.post);
 router.get('/profile', auth, profile.get);
 router.patch('/profile', auth, profile.patch);
-router.delete('/users/:Id', auth, users.delete);
+router.delete('/users/:id', auth, users.delete);
 router.get('/news', auth, news.get);
 router.post('/news', auth, news.post);
-router.patch('/news/:Id', auth, news.patch);
-router.delete('/news/:Id', auth, news.delete);
+router.patch('/news/:id', auth, news.patch);
+router.delete('/news/:id', auth, news.delete);
 router.get('/users', auth, users.get);
-router.patch('/users/:Id/permission', auth, permissionPatch);
+router.patch('/users/:id/permission', auth, permissionPatch);
 
 //404
 app.use(function (req, res, next) {
