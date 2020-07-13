@@ -3,6 +3,9 @@ const tokens = require('../auth/tokens.js');
 const secret = require('../auth/config.json');
 const helper = require('../helpers/serialize');
 require('../auth/passport.js');
+require('../models.connection.js');
+
+
 module.exports.post = async function (req, res, next) {
   passport.authenticate('local', { session: false },
     async function (err, user) {
@@ -10,7 +13,7 @@ module.exports.post = async function (req, res, next) {
         return next(err);
       }
       if (!user) {
-        return res.status(400).json({});
+        return res.status(400).json({'BIG FUCKING BULLSHIT'});
       }
       if (user) {
         const token = await tokens.createTokens(user, secret.secret);
