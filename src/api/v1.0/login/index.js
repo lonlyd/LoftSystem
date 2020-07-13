@@ -13,7 +13,7 @@ module.exports.post = async function (req, res, next) {
         return next(err);
       }
       if (!user) {
-        return res.status(400).json({'BIG FUCKING BULLSHIT'});
+        return res.status(400).json({});
       }
       if (user) {
         const token = await tokens.createTokens(user, secret.secret);
