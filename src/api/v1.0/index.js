@@ -8,8 +8,8 @@ const io = require('socket.io').listen(server);
 const helper = require('./helpers/serialize');
 const db = require('./models');
 
-const tokens = require('../auth/tokens.js');
-const secret = require('../auth/config.json');
+const tokens = require('./auth/tokens.js');
+const secret = require('./auth/config.json');
 
 // const login = require(path.join(__dirname, 'login'));
 const news = require(path.join(__dirname, 'news'));
