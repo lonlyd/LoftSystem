@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 require('dotenv').config();
-let dbUrl = process.env.MONGODB_URI;
+let dbUrl = process.env.MONGODB_URI ||'mongodb://localhost:27017/loftsystem';
 // let dbPort = process.env.DB_PORT || 27017;
 // let dbCollection = process.env.DB_COLLECTION || 'loftsystem';
 // let uri = `mongodb://${dbUrl}:${dbPort}/${dbCollection}`;
