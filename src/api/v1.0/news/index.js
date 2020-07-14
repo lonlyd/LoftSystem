@@ -4,8 +4,6 @@ const secret = require('../auth/config.json');
 const tokens = require('../auth/tokens.js');
 require('../models/connection.js');
 
-
-
 module.exports.get = async function (req, res, next) {
   try {
     const news = await db.getNews();
@@ -40,6 +38,7 @@ module.exports.patch = async function (req, res, next) {
 module.exports.delete = async function (req, res, next) {
   try {
     await db.deleteNews(req.params.id);
+    console.log(req.params.id)
     const news = await db.getNews();
     res.json(news);
   } catch (e) {
