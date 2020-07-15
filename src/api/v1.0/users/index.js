@@ -1,8 +1,6 @@
 const db = require('../models');
 const helper = require('../helpers/serialize');
 
-
-
 module.exports.get = async function (req, res) {
   const users = await db.getUsers();
   res.json(users.map((user) => helper.serializeUser(user)));

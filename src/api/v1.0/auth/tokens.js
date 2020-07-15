@@ -44,7 +44,7 @@ const refreshTokens = async function (refreshToken, models, SECRET) {
     return {}
   }
 }
-const getUserByToken = async function(token, models, SECRET) {
+const getUserByToken = async function (token, models, SECRET) {
   let userId = -1
   try {
     userId = jwt.verify(token, SECRET).user.id;

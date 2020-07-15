@@ -3,11 +3,9 @@ const app = express();
 const router = express.Router();
 const path = require('path');
 const passport = require('passport');
-// const server = require('http').createServer(app);
-// const io = require('socket.io').listen(server);
 const helper = require('./helpers/serialize');
 const db = require('./models');
-require ('./models/connection');
+require('./models/connection');
 const bodyParser = require('body-parser');
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
@@ -32,63 +30,6 @@ const auth = (req, res, next) => {
   })(req, res, next)
 }
 require(path.join(__dirname, 'socket'));
-
-// const connectedUsers = {};
-// const historyMessage = {};
-
-// const addMessage = (senderId, recipientId, data) => {
-//   if (historyMessage[senderId]) {
-//     if (historyMessage[senderId][recipientId]) {
-//       if (historyMessage[senderId][recipientId].length > 10) {
-//         historyMessage[senderId][recipientId].shift()
-//       }
-//       historyMessage[senderId][recipientId].push(data)
-//     } else {
-//       historyMessage[senderId][recipientId] = []
-//       historyMessage[senderId][recipientId].push(data)
-//     }
-//   } else {
-//     historyMessage[senderId] = {}
-//     historyMessage[senderId][recipientId] = []
-//     historyMessage[senderId][recipientId].push(data)
-//   }
-// }
-
-// io.on('connection', function (socket) {
-//   const socketId = socket.id;
-//   socket.on('user:connect', function (data) {
-//     const user = { ...data, socketId, activeRoom: null };
-//     connectedUsers[socketId] = user;
-//     socket.emit('user:list', Object.values(connectedUsers));
-//     socket.broadcast.emit('user:add', user);
-//   });
-//   socket.on('message:add', function (data) {
-//     ////////////////////
-//     console.log('message:add');
-//     console.log(data);
-//     ////////////////////
-//     const { senderId, recipientId } = data;
-//     socket.emit('message:add', data);
-//     socket.broadcast.to(data.roomId).emit('message:add', data);
-//     addMessage(senderId, recipientId, data);
-//     addMessage(recipientId, senderId, data);
-//   });
-//   socket.on('message:history', function (data) {
-//     ///////////
-//     console.log('message:history')
-//     console.log(data)
-//     console.log(historyMessage)
-//     //////////////
-//     if (historyMessage[data.userId] && historyMessage[data.userId][data.recipientId]) {
-//       socket.emit('message:history', historyMessage[data.userId][data.recipientId]);
-//       console.log(historyMessage[data.userId][data.recipientId]);
-//     }
-//   })
-//   socket.on('disconnect', function (data) {
-//     delete connectedUsers[socketId];
-//     socket.broadcast.emit('users:leave', socketId);
-//   })
-// })
 
 const permissionPatch = async function (req, res, next) {
   try {

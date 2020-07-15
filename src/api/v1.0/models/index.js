@@ -75,7 +75,7 @@ module.exports.createNews = async function (data, user) {
 
 module.exports.updateNews = async function (id, data) {
     return await News.findByIdAndUpdate(
-        { _id: id }, 
+        { _id: id },
         { $set: data });
 }
 

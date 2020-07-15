@@ -14,7 +14,7 @@ module.exports.post = async (req, res, next) => {
         return next(err)
       }
       if (!user) {
-        return res.status(400).json({}) 
+        return res.status(400).json({})
       }
       if (user) {
         const token = await tokens.createTokens(user, secret.secret)
