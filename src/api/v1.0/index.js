@@ -29,7 +29,6 @@ const auth = (req, res, next) => {
     }
   })(req, res, next)
 }
-require(path.join(__dirname, 'socket'));
 
 const permissionPatch = async function (req, res, next) {
   try {
